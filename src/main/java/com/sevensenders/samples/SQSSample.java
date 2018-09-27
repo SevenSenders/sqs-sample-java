@@ -17,18 +17,10 @@ import com.amazonaws.services.sqs.model.Message;
 public class SQSSample {
 
     public static void main(String[] args) {
-        Properties cfg = new Properties();
-        try {
-            cfg.load(new FileInputStream("config.properties"));
-        } catch (IOException ioe) {
-            System.out.println("Error reading configuration: " + ioe.getMessage());
-        }
-
-        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(cfg.getProperty("apiKey"), "");
+        BasicAWSCredentials awsCredentials = new BasicAWSCredentials("sevensenders-api-key", "");
         AmazonSQS sqs = AmazonSQSClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-                .withEndpointConfiguration(new EndpointConfiguration(
-                        cfg.getProperty("endpoint", "https://analytics-api.7senders.com"), ""))
+                .withEndpointConfiguration(new EndpointConfiguration("https://analytics-api.7senders.com", ""))
                 .build();
 
         try {
@@ -46,17 +38,14 @@ public class SQSSample {
             }
 
         } catch (AmazonServiceException ase) {
-            System.out.println("Caught an AmazonServiceException, which means your request made it "
-                    + "to SQS Proxy, but was rejected with an error response for some reason.");
+            System.out.println("AmazonServiceException: Your request made it to SQS Proxy, but was rejected");
             System.out.println("Error Message:    " + ase.getMessage());
             System.out.println("HTTP Status Code: " + ase.getStatusCode());
             System.out.println("AWS Error Code:   " + ase.getErrorCode());
             System.out.println("Error Type:       " + ase.getErrorType());
             System.out.println("Request ID:       " + ase.getRequestId());
         } catch (AmazonClientException ace) {
-            System.out.println("Caught an AmazonClientException, which means the client encountered "
-                    + "a serious internal problem while trying to communicate with Endpoint, "
-                    + "such as not being able to access the network.");
+            System.out.println("AmazonClientException: Request failed.");
             System.out.println("Error Message: " + ace.getMessage());
         }
     }

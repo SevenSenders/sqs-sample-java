@@ -13,11 +13,11 @@ mvn package
 
 ## Credentials
 
-Enter your Seven Senders API key in the `config.properties` file.
+Enter your Seven Senders API key in the `SQSSample.java` file.
 
 ## Running The Sample
 
-This sample application connects to The Seven Senders SQS Proxy and retrieves the Queue Url.
+This sample application connects to The Seven Senders SQS Proxy, retrieves the Queue Url and the messages from the queue (if there are any).
 
 ```bash
 mvn clean compile exec:java
