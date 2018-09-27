@@ -1,9 +1,6 @@
 package com.sevensenders.samples;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -20,7 +17,7 @@ public class SQSSample {
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials("sevensenders-api-key", "");
         AmazonSQS sqs = AmazonSQSClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-                .withEndpointConfiguration(new EndpointConfiguration("https://analytics-api.7senders.com", ""))
+                .withEndpointConfiguration(new EndpointConfiguration("https://analytics-api.7senders.com/queue.xml", ""))
                 .build();
 
         try {
