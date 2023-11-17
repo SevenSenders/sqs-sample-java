@@ -24,6 +24,7 @@ public class SQSSample {
                 .build();
 
         try {
+            //Example for receiving messages
             System.out.println("Getting Queue URL");
             String queueUrl = sqs.getQueueUrl("").getQueueUrl();
             System.out.println("Result: " + queueUrl);
@@ -32,19 +33,18 @@ public class SQSSample {
 
             List<Message> messages = sqs.receiveMessage(queueUrl).getMessages();
 
-            // Delete single message
             for (Message m : messages) {
                 System.out.println(m.getMessageId() + ":");
                 System.out.println(m.getBody());
 
                 // Process the message...
 
-                // Delete the single message
+                // Example for deleting messages one by one
                 sqs.deleteMessage(queueUrl, m.getReceiptHandle());
                 System.out.println("Message deleted: " + m.getMessageId());
             }
 
-            // Delete batch of messages
+            // Example for deleting messages in batch
             List<DeleteMessageBatchRequestEntry> deleteEntries = new ArrayList<>();
             for (Message m : messages) {
                 deleteEntries.add(new DeleteMessageBatchRequestEntry(m.getMessageId(), m.getReceiptHandle()));
