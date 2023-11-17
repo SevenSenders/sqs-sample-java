@@ -1,6 +1,7 @@
 package com.sevensenders.samples;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -10,6 +11,8 @@ import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.Message;
+import com.amazonaws.services.sqs.model.DeleteMessageBatchRequest;
+import com.amazonaws.services.sqs.model.DeleteMessageBatchRequestEntry;
 
 public class SQSSample {
 
@@ -22,16 +25,35 @@ public class SQSSample {
 
         try {
             System.out.println("Getting Queue URL");
-            String queue_url = sqs.getQueueUrl("").getQueueUrl();
-            System.out.println("Result: " + queue_url);
+            String queueUrl = sqs.getQueueUrl("").getQueueUrl();
+            System.out.println("Result: " + queueUrl);
 
             System.out.println("Receiving messages...\n");
 
-            List<Message> messages = sqs.receiveMessage("").getMessages();
+            List<Message> messages = sqs.receiveMessage(queueUrl).getMessages();
 
+            // Delete single message
             for (Message m : messages) {
                 System.out.println(m.getMessageId() + ":");
                 System.out.println(m.getBody());
+
+                // Process the message...
+
+                // Delete the single message
+                sqs.deleteMessage(queueUrl, m.getReceiptHandle());
+                System.out.println("Message deleted: " + m.getMessageId());
+            }
+
+            // Delete batch of messages
+            List<DeleteMessageBatchRequestEntry> deleteEntries = new ArrayList<>();
+            for (Message m : messages) {
+                deleteEntries.add(new DeleteMessageBatchRequestEntry(m.getMessageId(), m.getReceiptHandle()));
+            }
+
+            if (!deleteEntries.isEmpty()) {
+                DeleteMessageBatchRequest deleteRequest = new DeleteMessageBatchRequest(queueUrl, deleteEntries);
+                sqs.deleteMessageBatch(deleteRequest);
+                System.out.println("Messages deleted in batch");
             }
 
         } catch (AmazonServiceException ase) {
