@@ -20,7 +20,7 @@ public class SQSSample {
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials("sevensenders-api-key", "");
         AmazonSQS sqs = AmazonSQSClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-                .withEndpointConfiguration(new EndpointConfiguration("https://analytics-api.7senders.com/queue.xml", ""))
+                .withEndpointConfiguration(new EndpointConfiguration("https://sqs.sevensenders.com/api/v1/shipment-events", ""))
                 .build();
 
         try {
