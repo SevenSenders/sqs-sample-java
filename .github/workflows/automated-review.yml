@@ -1,0 +1,38 @@
+# Example workflow showing minimal setup for using the Claude Code Review Action
+# Copy this to your repository's .github/workflows/ directory
+
+name: Automated Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+    branches:
+      - main
+      - master
+      - staging
+      - develop
+
+jobs:
+  automated-review:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.type != 'Bot' && !endsWith(github.event.pull_request.user.login, '[bot]')
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: read
+      id-token: write
+
+    steps:
+      - name: Run Claude Code Review
+        uses: SevenSenders/code-review-action@v1
+        with:
+          github_app_id: ${{ secrets.SEVENSENDERS_RABBIT_GITHUB_APP_ID }}
+          github_app_private_key: ${{ secrets.SEVENSENDERS_RABBIT_GITHUB_APP_SECRET }}
+          aws_account_id: ${{ secrets.AWS_7S_AI_REVIEW }}
+          bedrock_model: ${{ vars.AI_REVIEW_MODEL }}
+          # Optional: Override defaults
+          # aws_region: eu-central-1
+          # track_progress: true
+          # hide_outdated_comments: true
+          # custom_prompt: |
+          #   Your custom prompt to append...
