@@ -24,12 +24,16 @@ jobs:
 
     steps:
       - name: Run Claude Code Review
-        uses: SevenSenders/code-review-action@v1
+        uses: SevenSenders/code-review-action@v2
         with:
           github_app_id: ${{ secrets.SEVENSENDERS_RABBIT_GITHUB_APP_ID }}
           github_app_private_key: ${{ secrets.SEVENSENDERS_RABBIT_GITHUB_APP_SECRET }}
           aws_account_id: ${{ secrets.AWS_7S_AI_REVIEW }}
           bedrock_model: ${{ vars.AI_REVIEW_MODEL }}
+          # Optional: Enable Jira integration
+          jira_url: ${{ vars.JIRA_URL }}
+          jira_email: ${{ vars.JIRA_EMAIL }}
+          jira_api_token: ${{ secrets.JIRA_API_TOKEN }}
           # Optional: Override defaults
           # aws_region: eu-central-1
           # track_progress: true
